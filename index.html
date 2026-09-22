@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>設計師個人名片卡片</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            purple: '#a855f7',
+                            violet: '#8b5cf6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            margin: 0;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Dark Theme Background */
+        html.dark body {
+            background-color: #09070F;
+            color: #E2E8F0;
+        }
+
+        /* Light Theme Background */
+        html:not(.dark) body {
+            background-color: #F8F5FF;
+            color: #1E152A;
+        }
+
+        .glow-bg {
+            position: absolute;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+            z-index: 0;
+            animation: pulseGlow 8s infinite alternate ease-in-out;
+            transition: background 0.5s ease;
+        }
+
+        html.dark .glow-bg {
+            background: radial-gradient(circle, rgba(147, 51, 234, 0.28) 0%, rgba(79, 70, 229, 0.12) 40%, rgba(0, 0, 0, 0) 70%);
+        }
+
+        html:not(.dark) .glow-bg {
+            background: radial-gradient(circle, rgba(192, 132, 252, 0.45) 0%, rgba(167, 139, 250, 0.2) 45%, rgba(255, 255, 255, 0) 75%);
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(0.9) translate(-10px, -10px); opacity: 0.7; }
+            100% { transform: scale(1.2) translate(10px, 10px); opacity: 1; }
+        }
+
+        .card-container {
+            position: relative;
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            /* Hover animation requirement: 0.6s cubic-bezier timing with -14px lift and deep blur shadow */
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), 
+                        box-shadow 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                        background-color 0.5s ease,
+                        border-color 0.5s ease;
+        }
+
+        /* Dark Mode Card Styling */
+        html.dark .card-container {
+            background: rgba(18, 14, 28, 0.75);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                        0 0 30px rgba(147, 51, 234, 0.1);
+        }
+
+        html.dark .card-container:hover {
+            transform: translateY(-14px);
+            border-color: rgba(168, 85, 247, 0.45);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8),
+                        0 0 60px rgba(168, 85, 247, 0.35);
+        }
+
+        /* Light Mode Card Styling */
+        html:not(.dark) .card-container {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(168, 85, 247, 0.25);
+            box-shadow: 0 15px 40px rgba(147, 51, 234, 0.08),
+                        0 4px 12px rgba(0, 0, 0, 0.03);
+        }
+
+        html:not(.dark) .card-container:hover {
+            transform: translateY(-14px);
+            border-color: rgba(147, 51, 234, 0.5);
+            box-shadow: 0 35px 70px rgba(147, 51, 234, 0.22),
+                        0 10px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .avatar-wrapper {
+            position: relative;
+        }
+        
+        .avatar-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a855f7, #6366f1, #ec4899);
+            opacity: 0.6;
+            filter: blur(8px);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            z-index: -1;
+        }
+
+        .avatar-wrapper:hover::after {
+            opacity: 1;
+            transform: scale(1.06);
+            filter: blur(14px);
+        }
+
+        /* Primary Button Styles */
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+            box-shadow: 0 4px 20px rgba(139, 92, 246, 0.35);
+            transition: all 0.3s ease;
+        }
+
+        .btn-purple:hover {
+            background: linear-gradient(135deg, #9333ea 0%, #4f46e5 100%);
+            box-shadow: 0 6px 25px rgba(147, 51, 234, 0.5);
+            transform: translateY(-2px);
+        }
+
+        .btn-purple:active {
+            transform: translateY(0);
+        }
+
+        /* Social Icons */
+        .social-icon {
+            transition: all 0.3s ease;
+        }
+
+        html.dark .social-icon {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #cbd5e1;
+        }
+
+        html.dark .social-icon:hover {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.5);
+            color: #e9d5ff;
+            transform: translateY(-3px);
+        }
+
+        html:not(.dark) .social-icon {
+            background: rgba(243, 232, 255, 0.6);
+            border: 1px solid rgba(168, 85, 247, 0.2);
+            color: #581c87;
+        }
+
+        html:not(.dark) .social-icon:hover {
+            background: rgba(168, 85, 247, 0.25);
+            border-color: rgba(147, 51, 234, 0.6);
+            color: #3b0764;
+            transform: translateY(-3px);
+        }
+
+        /* Mode Toggle Button */
+        .theme-toggle-btn {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        html.dark .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f1f5f9;
+        }
+
+        html.dark .theme-toggle-btn:hover {
+            background: rgba(168, 85, 247, 0.25);
+            border-color: rgba(168, 85, 247, 0.5);
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        html:not(.dark) .theme-toggle-btn {
+            background: rgba(233, 213, 255, 0.5);
+            border: 1px solid rgba(168, 85, 247, 0.3);
+            color: #6b21a8;
+        }
+
+        html:not(.dark) .theme-toggle-btn:hover {
+            background: rgba(168, 85, 247, 0.3);
+            border-color: rgba(147, 51, 234, 0.6);
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        .contact-drawer {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .contact-drawer.active {
+            max-height: 120px;
+            opacity: 1;
+            margin-top: 1.25rem;
+        }
+
+        .toast {
+            transform: translateY(20px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 relative">
+
+    <!-- Background Ambient Glow Effect -->
+    <div class="glow-bg"></div>
+
+    <main class="card-container relative z-10 w-full max-w-sm rounded-3xl p-8 text-center flex flex-col items-center">
+        
+        <!-- Top Action Bar: Availability Badge & Theme Toggle Switch -->
+        <div class="w-full flex items-center justify-between mb-4">
+            <!-- Availability Status Badge -->
+            <div class="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-purple-950/40 border border-purple-800/30 text-xs text-purple-300 dark:bg-purple-950/40 dark:border-purple-800/30 dark:text-purple-300 bg-purple-100 border-purple-200 text-purple-900">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span class="font-medium tracking-wide">MIDORI Projects</span>
+            </div>
+
+            <!-- Theme Toggle Button (Light/Dark Mode Switch) -->
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="theme-toggle-btn w-9 h-9 rounded-full flex items-center justify-center text-sm focus:outline-none" aria-label="Toggle Theme" title="切換日夜模式">
+                <i id="themeIcon" class="fa-solid fa-moon"></i>
+            </button>
+        </div>
+
+        <!-- Avatar Placeholder Container -->
+        <div class="avatar-wrapper my-2 w-24 h-24 rounded-full p-1 bg-slate-900/10 dark:bg-slate-900 border border-purple-500/30 cursor-pointer group">
+            <div class="w-full h-full rounded-full overflow-hidden bg-purple-100 dark:bg-purple-950/50 flex items-center justify-center relative">
+                <!-- Avatar SVG Placeholder -->
+                <svg class="w-12 h-12 text-purple-600 dark:text-purple-300/70 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <!-- Interactive Hover Label -->
+                <div class="absolute inset-0 bg-purple-900/70 dark:bg-purple-900/70 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs font-semibold text-purple-100">
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Designer Name & Verification Badge -->
+        <div class="flex items-center justify-center space-x-2 mb-1 mt-2">
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 dark:text-white transition-colors duration-500">YU HSUAN</h1>
+            <i class="fa-solid fa-circle-check text-purple-600 dark:text-purple-400 text-sm" title="Verified Designer"></i>
+        </div>
+
+        <!-- Professional Title -->
+        <p class="text-purple-700 dark:text-purple-300/90 text-sm font-semibold tracking-wider uppercase mb-3 transition-colors duration-500">
+            Lead UI/UX Designer
+        </p>
+
+        <!-- Bio Description -->
+        <p class="text-slate-600 dark:text-slate-400 text-xs sm:text-sm leading-relaxed mb-6 font-light px-2 transition-colors duration-500">
+            專注於打造兼具極簡美學與直覺體驗的數位產品。探索視覺設計與互動科技的無限可能。
+        </p>
+
+        <!-- Social Media Icons -->
+        <div class="flex items-center justify-center space-x-3 mb-6 w-full">
+            <a href="#" class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-sm" aria-label="Dribbble">
+                <i class="fa-brands fa-dribbble"></i>
+            </a>
+            <a href="#" class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-sm" aria-label="Behance">
+                <i class="fa-brands fa-behance"></i>
+            </a>
+            <a href="#" class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-sm" aria-label="GitHub">
+                <i class="fa-brands fa-github"></i>
+            </a>
+            <a href="#" class="social-icon w-10 h-10 rounded-xl flex items-center justify-center text-sm" aria-label="LinkedIn">
+                <i class="fa-brands fa-linkedin-in"></i>
+            </a>
+        </div>
+
+        <!-- Action Button -->
+        <button id="contactBtn" onclick="toggleContact()" class="btn-purple w-full py-3 px-6 rounded-xl font-medium text-white text-sm flex items-center justify-center space-x-2 group">
+            <i class="fa-regular fa-paper-plane text-xs transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"></i>
+            <span>與我聯絡</span>
+        </button>
+
+        <!-- Contact Email Expandable Drawer -->
+        <div id="contactDrawer" class="contact-drawer w-full">
+            <div class="p-3.5 rounded-xl bg-purple-100/70 dark:bg-purple-950/30 border border-purple-300/40 dark:border-purple-500/15 flex items-center justify-between text-xs transition-colors duration-500">
+                <div class="flex items-center space-x-2.5 overflow-hidden">
+                    <i class="fa-regular fa-envelope text-purple-600 dark:text-purple-400"></i>
+                    <span id="emailText" class="text-slate-800 dark:text-slate-300 truncate font-mono">alex.design@example.com</span>
+                </div>
+                <button onclick="copyEmail()" class="ml-2 px-2.5 py-1.5 rounded-lg bg-purple-200/80 hover:bg-purple-300/80 dark:bg-purple-900/50 dark:hover:bg-purple-800/60 text-purple-900 dark:text-purple-200 transition-colors shrink-0 flex items-center space-x-1 font-medium">
+                    <i class="fa-regular fa-copy"></i>
+                    <span>複製</span>
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Toast Popup Notification -->
+    <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900/90 dark:bg-slate-900/90 bg-white/95 border border-purple-500/30 text-slate-800 dark:text-purple-200 px-4 py-2.5 rounded-xl text-xs flex items-center space-x-2 shadow-2xl backdrop-blur-md pointer-events-none z-50">
+        <i class="fa-solid fa-circle-check text-emerald-500 dark:text-emerald-400"></i>
+        <span id="toastMsg" class="font-medium text-slate-700 dark:text-purple-200">Email 已成功複製到剪貼簿！</span>
+    </div>
+
+    <script>
+        // 1. 日夜主題切換邏輯 (Theme Toggle Logic)
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (html.classList.contains('dark')) {
+                // Switch to Light Theme (White & Soft Purple)
+                html.classList.remove('dark');
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                // Switch to Dark Theme (Sleek Black & Purple)
+                html.classList.add('dark');
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        // 2. 切換聯絡資訊抽屜 (Expandable Drawer Toggle)
+        function toggleContact() {
+            const drawer = document.getElementById('contactDrawer');
+            const btn = document.getElementById('contactBtn');
+            
+            drawer.classList.toggle('active');
+            
+            if (drawer.classList.contains('active')) {
+                btn.classList.add('ring-2', 'ring-purple-400/50');
+            } else {
+                btn.classList.remove('ring-2', 'ring-purple-400/50');
+            }
+        }
+
+        // 3. 複製 Email 到剪貼簿 (Copy to Clipboard)
+        function copyEmail() {
+            const email = document.getElementById('emailText').innerText;
+            
+            const tempInput = document.createElement('input');
+            tempInput.value = email;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast('Email 已複製到剪貼簿！');
+        }
+
+        // 4. 顯示 Toast 訊息 (Toast Notification Controller)
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMsg');
+            
+            toastMsg.innerText = message;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
